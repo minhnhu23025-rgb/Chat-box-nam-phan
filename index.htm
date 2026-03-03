@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đầu Bếp Nam Phan - 10,000+ Công thức</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --asia: #e74c3c; 
+    --europe: #0984e3; 
+    --sweet: #e84393; 
+    --savory: #e17055; 
+    --dark: #2d3436;
+    --bg: #f5f6fa;
+  }
+  
+  * { box-sizing: border-box; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding: 20px 10px; color: var(--dark); }
+  .app-container { max-width: 900px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); overflow: hidden; }
+  
+  .header { background: linear-gradient(135deg, var(--dark), #1e272e); color: white; padding: 35px 30px; text-align: center; }
+  .header h1 { margin: 5px 0 0 0; font-size: 34px; font-weight: 800; background: -webkit-linear-gradient(45deg, #f1c40f, #e67e22); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header span { font-size: 13px; opacity: 0.8; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; color: #a4b0be; }
+
+  .filter-box { padding: 25px 30px; background: white; border-bottom: 1px solid #edf2f5; }
+  .filter-label { font-size: 12px; font-weight: 800; color: #7f8fa6; text-transform: uppercase; margin-bottom: 12px; display: block; letter-spacing: 1px; }
+  
+  .chip-group { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+  .chip-group:last-child { margin-bottom: 0; }
+  .chip { padding: 10px 20px; border-radius: 50px; background: var(--bg); border: 2px solid transparent; cursor: pointer; font-size: 14px; font-weight: 700; color: #718093; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; }
+  
+  .chip:hover { background: #e8ecf1; transform: translateY(-2px); }
+  
+  /* Active States */
+  .chip.active[data-type="region"] { background: var(--dark); color: white; box-shadow: 0 4px 15px rgba(45, 52, 54, 0.2); }
+  .chip.active[data-val="savory"] { background: var(--savory); color: white; box-shadow: 0 4px 15px rgba(225, 112, 85, 0.3); }
+  .chip.active[data-val="sweet"] { background: var(--sweet); color: white; box-shadow: 0 4px 15px rgba(232, 67, 147, 0.3); }
+
+  .search-area { padding: 25px 30px; background: #fafbfc; border-bottom: 1px solid #edf2f5; }
+  .search-form { display: flex; gap: 12px; }
+  input { flex: 1; padding: 16px 20px; border-radius: 14px; border: 2px solid #dfe6e9; font-size: 15px; outline: none; transition: 0.3s; font-family: inherit; font-weight: 500;}
+  input:focus { border-color: var(--dark); box-shadow: 0 0 0 4px rgba(45, 52, 54, 0.1); }
+  .btn-go { padding: 0 30px; background: var(--dark); color: white; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; }
+  .btn-go:hover { background: #f1c40f; color: var(--dark); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); }
+  .btn-go:active { transform: translateY(0); }
+
+  #result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding: 30px; background: var(--bg); max-height: 650px; overflow-y: auto; scroll-behavior: smooth;}
+  
+  .recipe-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.04); position: relative; transition: all 0.3s; animation: fadeIn 0.4s ease-out forwards; opacity: 0; display: flex; flex-direction: column;}
+  .recipe-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top-color: var(--dark); }
+  
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .card-category { font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 8px; color: white; text-transform: uppercase; letter-spacing: 1px;}
+  .card-icon { font-size: 26px; }
+  
+  .recipe-name { font-size: 20px; font-weight: 800; color: #2d3436; margin-bottom: 12px; line-height: 1.3; text-transform: capitalize; }
+  
+  .recipe-meta { display: flex; gap: 15px; font-size: 13px; font-weight: 700; color: #a4b0be; margin-bottom: 20px; }
+  .recipe-meta span { display: flex; align-items: center; gap: 4px; }
+  
+  .recipe-steps { flex: 1; border-top: 2px dashed #edf2f5; padding-top: 15px; }
+  .step { font-size: 14px; color: #636e72; margin-bottom: 12px; display: flex; gap: 12px; line-height: 1.6; padding: 8px; border-radius: 8px; transition: background 0.2s; }
+  .step:hover { background: #f8f9fa; color: #2d3436; }
+  .step b { color: var(--dark); min-width: 24px; height: 24px; background: #dfe6e9; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 12px;}
+
+  .empty-state { text-align: center; grid-column: 1/-1; padding: 50px 0; color: #7f8fa6; font-size: 16px; font-weight: 500;}
+  .empty-state .emoji { font-size: 60px; margin-bottom: 15px; display: block; animation: bounce 2s infinite;}
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #b2bec3; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #636e72; }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header">
+    <span>DATABASE: 10,000+ CÔNG THỨC</span>
+    <h1>👨‍🍳 ĐẦU BẾP NAM PHAN</h1>
+  </div>
+
+  <div class="filter-box">
+    <span class="filter-label">1. CHỌN PHONG CÁCH ẨM THỰC</span>
+    <div class="chip-group" id="region-chips">
+      <div class="chip active" data-type="region" data-val="asia">🥢 CHÂU Á</div>
+      <div class="chip" data-type="region" data-val="europe">🍴 CHÂU ÂU</div>
+    </div>
+
+    <span class="filter-label">2. CHỌN LOẠI MÓN ĂN</span>
+    <div class="chip-group" id="taste-chips">
+      <div class="chip active" data-type="taste" data-val="savory">🥩 MÓN CHÍNH (MẶN)</div>
+      <div class="chip" data-type="taste" data-val="sweet">🍰 TRÁNG MIỆNG (NGỌT)</div>
+    </div>
+  </div>
+
+  <div class="search-area">
+    <form class="search-form" onsubmit="event.preventDefault(); generateAndSearch();">
+      <!-- Thêm thuộc tính onkeyup để Live Search -->
+      <input type="text" id="searchInput" placeholder="Tìm theo tên món hoặc nguyên liệu (VD: bò, dâu, phô mai...)" onkeyup="liveSearch()">
+      <button type="submit" class="btn-go">TÌM CÔNG THỨC</button>
+    </form>
+  </div>
+
+  <div id="result-grid"></div>
+</div>
+
+<script>
+// --- CHUẨN HOÁ DỮ LIỆU BẰNG OBJECT ĐỂ HIỂN THỊ CHÍNH XÁC ---
+const savoryIngs =[
+  {name: "Thịt gà", emoji: "🍗"}, {name: "Thịt bò thăn", emoji: "🥩"}, {name: "Thịt ba chỉ", emoji: "🥓"}, 
+  {name: "Tôm sú", emoji: "🍤"}, {name: "Cá hồi Na-uy", emoji: "🍣"}, {name: "Mực ống", emoji: "🦑"}, 
+  {name: "Đậu hũ non", emoji: "🧊"}, {name: "Sườn non", emoji: "🍖"}, {name: "Cua biển", emoji: "🦀"}, 
+  {name: "Bạch tuộc", emoji: "🐙"}, {name: "Nấm kim châm", emoji: "🍄"}, {name: "Khoai tây", emoji: "🥔"}
+];
+
+const sweetIngs =[
+  {name: "Bột mì", emoji: "🌾"}, {name: "Socola đen", emoji: "🍫"}, {name: "Dâu tây", emoji: "🍓"}, 
+  {name: "Phô mai kem", emoji: "🧀"}, {name: "Bơ lạt", emoji: "🧈"}, {name: "Sữa tươi", emoji: "🥛"}, 
+  {name: "Trà xanh", emoji: "🍵"}, {name: "Trái cây dầm", emoji: "🥭"}
+];
+
+const actions = {
+  asia_savory:["kho tộ gừng", "xào sả ớt", "chiên nước mắm", "nấu canh dứa", "ram mặn ngọt", "nướng muối ớt", "hấp mỡ hành", "xào lăn cà ri"],
+  europe_savory:["sốt kem nấm", "bỏ lò phô mai", "áp chảo bơ tỏi", "hầm vang đỏ", "nướng lá Rosemary", "ăn kèm khoai nghiền", "đút lò phô mai tan chảy"],
+  asia_sweet:["nấu chè mây", "làm bánh dẻo", "hấp nước cốt dừa", "chiên ngào đường", "làm thạch lá dứa", "dầm sữa chua trân châu"],
+  europe_sweet:["làm bánh Tart", "nướng bánh quy", "làm Mousse lạnh", "làm Pancake mật phong", "phủ whipping cream", "nướng Soufflé", "làm bánh Crepe ngàn lớp"]
+};
+
+const seasonings = {
+  asia:["nước mắm nhỉ, đường cát, tiêu sọ và hành tím", "sả băm, ớt sừng, tỏi đập dập, dầu hào", "gừng tươi xắt sợi, rượu nếp và xì dầu cô đặc"],
+  europe:["bơ lạt Anchor, lá thơm Oregano, tiêu đen xay, muối hồng", "rượu vang Merlot, tỏi tây phi, nhụy hoa nghệ tây", "kem tươi, sốt truffle và phô mai Parmesan bào"]
+};
+
+// Thuật toán gõ tới đâu hiển thị món tới đó (Live search bằng setTimeout chống giật máy)
+let typingTimer;
+function liveSearch() {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(generateAndSearch, 300); // Đợi 300ms sau khi ngừng gõ mới chạy code
+}
+
+// Xử lý nút click Filter
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', function() {
+    this.parentElement.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+    // Sinh lại món sau khi đổi filter
+    generateAndSearch();
+  });
+});
+
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateAndSearch() {
+  const region = document.querySelector('#region-chips .active').dataset.val;
+  const taste = document.querySelector('#taste-chips .active').dataset.val;
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const grid = document.getElementById('result-grid');
+  
+  grid.innerHTML = ''; // Làm sạch UI
+  
+  const comboKey = `${region}_${taste}`;
+  const currentActions = actions[comboKey];
+  const ingsList = taste === 'savory' ? savoryIngs : sweetIngs;
+  
+  let found = 0;
+  let delayTime = 0; // Để xếp lớp hiệu ứng Mờ dần hiển thị
+
+  ingsList.forEach(ingObj => {
+    currentActions.forEach(action => {
+      const dishName = `${ingObj.name} ${action}`;
+      
+      // Bộ lọc logic: Tìm Tên NL HOẶC Tên cả Món
+      if (query === "" || dishName.toLowerCase().includes(query)) {
+        if (found < 40) { 
+          createCard(dishName, ingObj.name, region, taste, ingObj.emoji, delayTime);
+          found++;
+          delayTime += 0.05; // Độ trễ hiệu ứng
+        }
+      }
+    });
+  });
+
+  if (found === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <span class="emoji">🤔</span>
+        <span>Đầu bếp Nam Phan chưa nghĩ ra món chứa từ khóa <b>"${query}"</b>.<br>Bạn hãy thử các từ khác nhé (ví dụ: bơ, sữa, dâu, cá...)!</span>
+      </div>`;
+  }
+}
+
+// Hàm khởi tạo Card món ăn (Sử dụng ingName để hiển thị chính xác tên nguyên liệu trong HD nấu ăn)
+function createCard(fullName, ingName, reg, taste, emoji, delay) {
+  const grid = document.getElementById('result-grid');
+  const card = document.createElement('div');
+  card.className = 'recipe-card';
+  card.style.animationDelay = `${delay}s`; 
+  
+  const color = taste === 'savory' ? 'var(--savory)' : 'var(--sweet)';
+  const label = `${reg.toUpperCase()} | ${taste === 'savory' ? 'MẶN' : 'NGỌT'}`;
+  
+  const prepTime = Math.floor(Math.random() * 30) + 15;
+  const calories = Math.floor(Math.random() * 500) + 150;
+  const difficulties =["Dễ 👨‍🍳", "Vừa 🔥", "Cao 🔥🔥"];
+  const difficulty = getRandomItem(difficulties);
+  const mySeasoning = getRandomItem(seasonings[reg]);
+
+  const steps =[
+    `Làm sạch và sơ chế đúng chuẩn cho <b>${ingName}</b> ${emoji}.`,
+    `Tẩm ướp cùng <i>${mySeasoning}</i> trong 15-20 phút cho thấm vị.`,
+    `Bật bếp và tiến hành chế biến thao tác <b>"${fullName.split(' ').slice(2).join(' ')}"</b> với nhiệt độ phù hợp.`,
+    `Trình bày ra đĩa sứ, trang trí nhẹ nhàng kiểu Đầu Bếp Nam Phan và thưởng thức.`
+  ];
+
+  card.innerHTML = `
+    <div class="card-header">
+        <span class="card-category" style="background:${color}">${label}</span>
+        <span class="card-icon">${emoji}</span>
+    </div>
+    <div class="recipe-name">${fullName}</div>
+    <div class="recipe-meta">
+      <span>⏱ ${prepTime} Phút</span>
+      <span>🔥 ${calories} Kcal</span>
+      <span>🔪 ${difficulty}</span>
+    </div>
+    <div class="recipe-steps">
+      ${steps.map((s, i) => `<div class="step"><b>${i+1}</b> <div>${s}</div></div>`).join('')}
+    </div>
+  `;
+  grid.appendChild(card);
+}
+
+// Chạy khởi tạo ứng dụng ban đầu
+window.onload = generateAndSearch;
+</script>
+</body>
+</html>
